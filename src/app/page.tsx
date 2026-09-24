@@ -12,6 +12,7 @@ const ClientPDFDownloadLink = dynamic(
 type ThemeMode = "light" | "dark";
 type DateMode = "payment" | "due" | null;
 type PaymentStatus = "Paid" | "Pending";
+type DiscountMode = "price" | "percentage";
 
 type InvoiceItem = {
   id: string;
@@ -216,6 +217,8 @@ function InvoiceDocument({
   amountInWords,
   paymentDetails,
   terms,
+  notes,
+  discountMode,
 }: {
   invoiceNumber: string;
   invoiceDate: string;
@@ -245,6 +248,8 @@ function InvoiceDocument({
     upiId: string;
   };
   terms: string;
+  notes: string;
+  discountMode: DiscountMode;
 }) {
   const invoiceMeta = [
     `Invoice No: ${invoiceNumber}`,
@@ -336,8 +341,11 @@ function InvoiceDocument({
           </View>
 
           {items.map((item) => {
+            const discountAmount = discountMode === "percentage"
+              ? toNumber(item.quantity) * toNumber(item.unitPrice) * toNumber(item.discount) / 100
+              : toNumber(item.discount);
             const itemTotal = Math.max(
-              toNumber(item.quantity) * toNumber(item.unitPrice) - (visibleColumns.discount ? toNumber(item.discount) : 0),
+              toNumber(item.quantity) * toNumber(item.unitPrice) - (visibleColumns.discount ? discountAmount : 0),
               0,
             );
 
@@ -358,7 +366,7 @@ function InvoiceDocument({
                 )}
                 {visibleColumns.discount && (
                   <Text style={[pdfStyles.tableCell, { width: "12%", textAlign: "right", paddingRight: 4 }]}>
-                    {formatMoney(toNumber(item.discount))}
+                    {discountMode === "percentage" ? `${toNumber(item.discount)}%` : formatMoney(toNumber(item.discount))}
                   </Text>
                 )}
                 {visibleColumns.total && (
@@ -408,6 +416,13 @@ function InvoiceDocument({
           </View>
         )}
 
+        {notes.trim() && (
+          <View style={pdfStyles.detailSection}>
+            <Text style={pdfStyles.label}>NOTES</Text>
+            <Text style={pdfStyles.footerText}>{notes}</Text>
+          </View>
+        )}
+
         <View style={pdfStyles.signatureRow}>
           <Image src={COMPANY.signature} style={pdfStyles.signature} />
           <Text style={pdfStyles.footerName}>{COMPANY.owner}</Text>
@@ -445,6 +460,8 @@ export default function Page() {
   const [overrideFinalAmount, setOverrideFinalAmount] = useState(false);
   const [manualFinalAmount, setManualFinalAmount] = useState(0);
   const [manualAdjustment, setManualAdjustment] = useState(0);
+  const [discountMode, setDiscountMode] = useState<DiscountMode>("price");
+  const [notes, setNotes] = useState("");
   const [visibleColumns, setVisibleColumns] = useState<VisibleColumns>({
     description: true,
     quantity: true,
@@ -492,11 +509,15 @@ export default function Page() {
     () =>
       items.map((item) => {
         const baseAmount = toNumber(item.quantity) * toNumber(item.unitPrice);
-        const discountAmount = visibleColumns.discount ? toNumber(item.discount) : 0;
+        const discountAmount = visibleColumns.discount
+          ? discountMode === "percentage"
+            ? baseAmount * toNumber(item.discount) / 100
+            : toNumber(item.discount)
+          : 0;
         const total = Math.max(baseAmount - discountAmount, 0);
         return { ...item, baseAmount, discountAmount, total };
       }),
-    [items, visibleColumns.discount],
+    [items, visibleColumns.discount, discountMode],
   );
 
   const subtotal = useMemo(() => itemTotals.reduce((sum, item) => sum + item.total, 0), [itemTotals]);
@@ -612,6 +633,8 @@ export default function Page() {
       amountInWords={amountInWords}
       paymentDetails={{ bankName, accountHolder, accountNumber, ifsc, upiId }}
       terms={terms}
+      notes={notes}
+      discountMode={discountMode}
     />
   );
 
@@ -729,9 +752,22 @@ export default function Page() {
                 ))}
               </div>
 
+              <div className="mb-4 max-w-xs space-y-2 text-sm">
+                <label htmlFor="discount-mode" className="font-medium">Discount Type</label>
+                <select
+                  id="discount-mode"
+                  value={discountMode}
+                  onChange={(event) => setDiscountMode(event.target.value as DiscountMode)}
+                  className={`w-full rounded-md border px-3 py-2 outline-none ${controlClasses}`}
+                >
+                  <option value="price">Price</option>
+                  <option value="percentage">Percentage</option>
+                </select>
+              </div>
+
               <div className="space-y-4">
                 {items.map((item, index) => {
-                  const itemTotal = toNumber(item.quantity) * toNumber(item.unitPrice) - (visibleColumns.discount ? toNumber(item.discount) : 0);
+                  const itemTotal = itemTotals.find((row) => row.id === item.id)?.total ?? 0;
                   return (
                     <div key={item.id} className="fade-in rounded-md border border-dashed border-current/10 p-3 transition-colors duration-200 hover:border-current/25">
                       <div className="mb-3 flex items-center justify-between">
@@ -766,7 +802,7 @@ export default function Page() {
 
                         {visibleColumns.discount && (
                           <label className="space-y-2 text-xs">
-                            <span className="font-medium">Discount</span>
+                            <span className="font-medium">Discount {discountMode === "percentage" ? "(%)" : "(Price)"}</span>
                             <input type="number" min="0" value={item.discount} onChange={(event) => updateItem(item.id, "discount", Number(event.target.value))} className={`w-full rounded-md border px-3 py-2 outline-none ${controlClasses}`} placeholder="0" />
                           </label>
                         )}
@@ -825,6 +861,11 @@ export default function Page() {
             <div className={`${cardClasses} w-full min-w-0 rounded-md border p-3 sm:p-4`}>
               <label className="mb-3 inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={termEnabled} onChange={(event) => setTermEnabled(event.target.checked)} />Terms & Conditions</label>
               {termEnabled && <textarea value={terms} onChange={(event) => setTerms(event.target.value)} rows={5} className={`fade-in w-full rounded-md border px-3 py-2.5 outline-none ${controlClasses}`} placeholder="Payment once made is non-refundable." />}
+            </div>
+
+            <div className={`${cardClasses} w-full min-w-0 rounded-md border p-3 sm:p-4`}>
+              <label htmlFor="invoice-notes" className="mb-3 block text-sm font-medium">Notes</label>
+              <textarea id="invoice-notes" value={notes} onChange={(event) => setNotes(event.target.value)} rows={4} className={`w-full rounded-md border px-3 py-2.5 outline-none ${controlClasses}`} placeholder="Add any additional notes" />
             </div>
           </section>
 
@@ -898,7 +939,7 @@ export default function Page() {
                             {visibleColumns.description && <td className="border-r border-zinc-200 py-2 pr-2 pl-2 leading-4">{row.description || "-"}</td>}
                             {visibleColumns.quantity && <td className="border-r border-zinc-200 py-2 pr-2 text-right">{toNumber(row.quantity)}</td>}
                             {visibleColumns.unitPrice && <td className="border-r border-zinc-200 py-2 pr-2 text-right">{formatMoney(toNumber(row.unitPrice))}</td>}
-                            {visibleColumns.discount && <td className="border-r border-zinc-200 py-2 pr-2 text-right">{formatMoney(toNumber(row.discount))}</td>}
+                            {visibleColumns.discount && <td className="border-r border-zinc-200 py-2 pr-2 text-right">{discountMode === "percentage" ? `${toNumber(row.discount)}%` : formatMoney(toNumber(row.discount))}</td>}
                             {visibleColumns.total && <td className="py-2 pr-2 text-right font-medium">{formatMoney(row.total)}</td>}
                           </tr>
                         ))}
@@ -935,6 +976,13 @@ export default function Page() {
                     <div className="mt-5 border-t border-zinc-300 pt-3">
                       <div className="mb-2 text-[10px] font-bold tracking-[0.18em] text-zinc-700">TERMS & CONDITIONS</div>
                       <div className="whitespace-pre-line text-[9px] leading-4 text-zinc-700">{terms}</div>
+                    </div>
+                  )}
+
+                  {notes.trim() && (
+                    <div className="mt-5 border-t border-zinc-300 pt-3">
+                      <div className="mb-2 text-[10px] font-bold tracking-[0.18em] text-zinc-700">NOTES</div>
+                      <div className="whitespace-pre-line text-[9px] leading-4 text-zinc-700">{notes}</div>
                     </div>
                   )}
 
