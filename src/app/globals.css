@@ -7,6 +7,8 @@
 html,
 body {
   min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -24,6 +26,30 @@ textarea,
 select,
 button {
   font: inherit;
+}
+
+button,
+select,
+input,
+textarea {
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease, background-color 160ms ease;
+}
+
+button:active,
+select:active {
+  transform: scale(0.98);
+}
+
+select:focus-visible {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
 }
 
 img {

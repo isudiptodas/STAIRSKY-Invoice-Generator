@@ -616,8 +616,8 @@ export default function Page() {
   );
 
   return (
-    <main className={`min-h-screen transition-colors duration-200 ${currentThemeClasses}`}>
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <main className={`app-shell min-h-screen overflow-hidden transition-colors duration-200 ${currentThemeClasses}`}>
+      <div className="mx-auto w-full max-w-7xl overflow-hidden px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
         <header className="mb-6 flex items-center justify-between gap-4 border-b border-current/10 pb-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[0.7rem] text-zinc-500">
@@ -637,7 +637,7 @@ export default function Page() {
 
         <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
           <section className="space-y-6">
-            <div className={`${cardClasses} rounded-md border p-4`}>
+            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
               <h2 className="mb-4 text-lg font-semibold">Invoice Details</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="space-y-2 text-sm">
@@ -688,7 +688,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className={`${cardClasses} rounded-md border p-4`}>
+            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
               <h2 className="mb-4 text-lg font-semibold">Client Details</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="space-y-2 text-sm"><span className="font-medium">Client Name</span><input value={clientName} onChange={(event) => setClientName(event.target.value)} className={`w-full rounded-md border px-3 py-2.5 outline-none ${controlClasses}`} /></label>
@@ -709,7 +709,7 @@ export default function Page() {
               {validationErrors.client && <p className="mt-3 text-xs text-red-500">{validationErrors.client}</p>}
             </div>
 
-            <div className={`${cardClasses} rounded-md border p-4`}>
+            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold">Services</h2>
                 <button type="button" onClick={addItemRow} className="rounded-md bg-[#111827] px-3 py-2 text-sm font-medium text-white transition-all duration-200 ease-out hover:-translate-y-0.5 hover:opacity-95 active:scale-95 dark:bg-[#f3f4f6] dark:text-[#111827]">+ Add Item</button>
@@ -788,7 +788,7 @@ export default function Page() {
               {validationErrors.items && <p className="mt-3 text-xs text-red-500">{validationErrors.items}</p>}
             </div>
 
-            <div className={`${cardClasses} rounded-md border p-4`}>
+            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
               <h2 className="mb-4 text-lg font-semibold">Amount</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="space-y-2 text-sm"><span className="font-medium">Manual Adjustment</span><input type="number" value={manualAdjustment} onChange={(event) => setManualAdjustment(Number(event.target.value) || 0)} className={`w-full rounded-md border px-3 py-2.5 outline-none ${controlClasses}`} /></label>
@@ -811,7 +811,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className={`${cardClasses} rounded-md border p-4`}>
+            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
               <h2 className="mb-4 text-lg font-semibold">Payment Details</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="space-y-2 text-sm"><span className="font-medium">Bank Name</span><input value={bankName} onChange={(event) => setBankName(event.target.value)} className={`w-full rounded-md border px-3 py-2.5 outline-none ${controlClasses}`} /></label>
@@ -822,7 +822,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className={`${cardClasses} rounded-md border p-4`}>
+            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
               <label className="mb-3 inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={termEnabled} onChange={(event) => setTermEnabled(event.target.checked)} />Terms & Conditions</label>
               {termEnabled && <textarea value={terms} onChange={(event) => setTerms(event.target.value)} rows={5} className={`fade-in w-full rounded-md border px-3 py-2.5 outline-none ${controlClasses}`} placeholder="Payment once made is non-refundable." />}
             </div>
