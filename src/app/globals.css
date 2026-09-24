@@ -50,6 +50,27 @@ select:focus-visible {
     max-width: 100%;
     overflow-x: hidden;
   }
+
+  .invoice-preview-sheet {
+    padding: 12px !important;
+    aspect-ratio: auto;
+    min-height: 920px;
+  }
+
+  .invoice-preview-header {
+    gap: 8px !important;
+  }
+
+  .invoice-preview-logo {
+    width: 70px !important;
+    height: 30px !important;
+  }
+
+  .invoice-preview-meta {
+    min-width: 0 !important;
+    width: 38% !important;
+    font-size: 8px;
+  }
 }
 
 img {

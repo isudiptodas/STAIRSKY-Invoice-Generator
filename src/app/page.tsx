@@ -618,7 +618,7 @@ export default function Page() {
   return (
     <main className={`app-shell min-h-screen overflow-hidden transition-colors duration-200 ${currentThemeClasses}`}>
       <div className="mx-auto w-full max-w-7xl overflow-hidden px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
-        <header className="mb-6 flex items-center justify-between gap-4 border-b border-current/10 pb-4">
+        <header className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-current/10 pb-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[0.7rem] text-zinc-500">
               Stairsky Advertising Private Limited
@@ -635,9 +635,9 @@ export default function Page() {
           </button>
         </header>
 
-        <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-          <section className="space-y-6">
-            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
+        <div className="grid min-w-0 w-full gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+          <section className="min-w-0 w-full space-y-6">
+            <div className={`${cardClasses} w-full min-w-0 rounded-md border p-3 sm:p-4`}>
               <h2 className="mb-4 text-lg font-semibold">Invoice Details</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="space-y-2 text-sm">
@@ -688,7 +688,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
+            <div className={`${cardClasses} w-full min-w-0 rounded-md border p-3 sm:p-4`}>
               <h2 className="mb-4 text-lg font-semibold">Client Details</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="space-y-2 text-sm"><span className="font-medium">Client Name</span><input value={clientName} onChange={(event) => setClientName(event.target.value)} className={`w-full rounded-md border px-3 py-2.5 outline-none ${controlClasses}`} /></label>
@@ -709,7 +709,7 @@ export default function Page() {
               {validationErrors.client && <p className="mt-3 text-xs text-red-500">{validationErrors.client}</p>}
             </div>
 
-            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
+            <div className={`${cardClasses} w-full min-w-0 rounded-md border p-3 sm:p-4`}>
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold">Services</h2>
                 <button type="button" onClick={addItemRow} className="rounded-md bg-[#111827] px-3 py-2 text-sm font-medium text-white transition-all duration-200 ease-out hover:-translate-y-0.5 hover:opacity-95 active:scale-95 dark:bg-[#f3f4f6] dark:text-[#111827]">+ Add Item</button>
@@ -739,7 +739,7 @@ export default function Page() {
                         <button type="button" onClick={() => deleteItemRow(item.id)} className="text-xs font-medium text-red-500 transition-all duration-150 hover:translate-x-0.5 hover:text-red-600 active:scale-95">Remove</button>
                       </div>
 
-                      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+                      <div className="grid min-w-0 gap-3 md:grid-cols-2 xl:grid-cols-5">
                         {visibleColumns.description && (
                           <label className="space-y-2 text-xs md:col-span-2">
                             <span className="font-medium">Description</span>
@@ -788,7 +788,7 @@ export default function Page() {
               {validationErrors.items && <p className="mt-3 text-xs text-red-500">{validationErrors.items}</p>}
             </div>
 
-            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
+            <div className={`${cardClasses} w-full min-w-0 rounded-md border p-3 sm:p-4`}>
               <h2 className="mb-4 text-lg font-semibold">Amount</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="space-y-2 text-sm"><span className="font-medium">Manual Adjustment</span><input type="number" value={manualAdjustment} onChange={(event) => setManualAdjustment(Number(event.target.value) || 0)} className={`w-full rounded-md border px-3 py-2.5 outline-none ${controlClasses}`} /></label>
@@ -811,7 +811,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
+            <div className={`${cardClasses} w-full min-w-0 rounded-md border p-3 sm:p-4`}>
               <h2 className="mb-4 text-lg font-semibold">Payment Details</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="space-y-2 text-sm"><span className="font-medium">Bank Name</span><input value={bankName} onChange={(event) => setBankName(event.target.value)} className={`w-full rounded-md border px-3 py-2.5 outline-none ${controlClasses}`} /></label>
@@ -822,24 +822,24 @@ export default function Page() {
               </div>
             </div>
 
-            <div className={`${cardClasses} rounded-md border p-3 sm:p-4`}>
+            <div className={`${cardClasses} w-full min-w-0 rounded-md border p-3 sm:p-4`}>
               <label className="mb-3 inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={termEnabled} onChange={(event) => setTermEnabled(event.target.checked)} />Terms & Conditions</label>
               {termEnabled && <textarea value={terms} onChange={(event) => setTerms(event.target.value)} rows={5} className={`fade-in w-full rounded-md border px-3 py-2.5 outline-none ${controlClasses}`} placeholder="Payment once made is non-refundable." />}
             </div>
           </section>
 
-          <aside className="xl:sticky xl:top-6 xl:self-start">
-            <div className="rounded-md border border-[#d1d5db] bg-white p-3 text-[#111827] shadow-sm">
+          <aside className="min-w-0 w-full xl:sticky xl:top-6 xl:self-start">
+            <div className="w-full min-w-0 overflow-hidden rounded-md border border-[#d1d5db] bg-white p-3 text-[#111827] shadow-sm">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-base font-semibold">Live Invoice Preview</h2>
                 <span className="text-[11px] uppercase tracking-[0.2em] text-zinc-500">A4</span>
               </div>
 
               <div style={{ margin: "0 auto", width: "100%", maxWidth: 820, background: "white", padding: 16, color: "#111827", boxShadow: "0 0 0 1px rgba(15,23,42,0.08)" }}>
-                <div style={{ margin: "0 auto", width: "100%", maxWidth: 760, aspectRatio: "210 / 297", background: "white", padding: 22, fontFamily: "Arial, Helvetica, sans-serif", fontSize: 10 }}>
-                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, borderBottom: "1px solid #d4d4d8", paddingBottom: 16 }}>
+                <div className="invoice-preview-sheet" style={{ margin: "0 auto", width: "100%", maxWidth: 760, aspectRatio: "210 / 297", background: "white", padding: 22, fontFamily: "Arial, Helvetica, sans-serif", fontSize: 10 }}>
+                  <div className="invoice-preview-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, borderBottom: "1px solid #d4d4d8", paddingBottom: 16 }}>
                     <div style={{ display: "flex", alignItems: "flex-start", gap: 12, minWidth: 0, flex: 1 }}>
-                      <img src={COMPANY.logo} alt="company logo" style={{ width: 110, height: 42, objectFit: "fill" }} />
+                      <img className="invoice-preview-logo" src={COMPANY.logo} alt="company logo" style={{ width: 110, height: 42, objectFit: "fill" }} />
                       <div style={{ minWidth: 0, flex: 1 }}>
                         <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", lineHeight: 1.2 }}>{COMPANY.name}</div>
                         <div style={{ marginTop: 4, maxWidth: 200, fontSize: 6.8, lineHeight: 1.4, color: "#52525b" }}>{COMPANY.address}</div>
@@ -847,7 +847,7 @@ export default function Page() {
                       </div>
                     </div>
 
-                    <div style={{ minWidth: 180, textAlign: "right" }}>
+                    <div className="invoice-preview-meta" style={{ minWidth: 180, textAlign: "right" }}>
                       <div style={{ fontSize: 18, fontWeight: 700, letterSpacing: 1.5 }}>INVOICE</div>
                       <div style={{ marginTop: 8, fontSize: 9, lineHeight: 1.4 }}>
                         <div>Invoice No: {invoiceNumber}</div>
