@@ -161,7 +161,7 @@ const pdfStyles = StyleSheet.create({
   leftCol: { width: 290 },
   rightCol: { width: 180, alignItems: "flex-end" },
   companyWrap: { flexDirection: "row", alignItems: "center", gap: 12 },
-  logo: { width: 70, height: 42, marginRight: 12, resizeMode: "stretch" },
+  logo: { width: 70, height: 35, marginRight: 12, resizeMode: "stretch" },
   companyName: { fontSize: 11, fontWeight: 700, marginBottom: 2, color: "#111827" },
   companyMeta: { fontSize: 7.6, color: "#4b5563", lineHeight: 1.5 },
   invoiceTitle: { fontSize: 18, fontWeight: 700, letterSpacing: 1, marginBottom: 8, color: "#111827" },
